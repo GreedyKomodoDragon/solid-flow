@@ -59,6 +59,8 @@ interface Props {
     edges: EdgeProps[];
     onNodesChange: (newNodes: NodeProps[]) => void;
     onEdgesChange: (newEdges: EdgeProps[]) => void;
+    height: string;
+    width: string;
 }
 
 function getEdgeId(nodeOutId: string, outputIndex: number, nodeInId: string, inputIndex: number) {
@@ -397,7 +399,11 @@ const FlowChart: Component<Props> = (props: Props) => {
     return (
         <div class={styles.main}>
             <div class={styles.wrapper}>
-                <div class={styles.content} style={{ cursor: newEdge() !== null ? "crosshair" : "inherit" }}>
+                <div class={styles.content} style={{ 
+                    cursor: newEdge() !== null ? "crosshair" : "inherit",
+                    height: props.height,
+                    width: props.width,
+                    }}>
                     <NodesBoard
                         nodesPositions={nodesPositions()}
                         nodes={nodesData}

@@ -1,4 +1,4 @@
-import { Accessor, Component, createEffect, createSignal, For } from "solid-js";
+import { Component, createEffect, createSignal, For } from "solid-js";
 import EdgeComponent from "../EdgeComponent";
 import styles from "./styles.module.css";
 
