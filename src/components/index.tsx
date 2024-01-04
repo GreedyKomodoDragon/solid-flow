@@ -1,48 +1,17 @@
 import { Component, createEffect, createSignal } from "solid-js";
 import { createStore, produce } from "solid-js/store";
-import dagre from "dagre";
-import graphlib from "graphlib";
 import EdgesBoard from "./EdgesBoard";
 import NodesBoard from "./NodesBoard";
 import styles from "./styles.module.css";
-
-interface Position {
-  x: number;
-  y: number;
-}
-
-interface Vector {
-  x0: number;
-  y0: number;
-  x1: number;
-  y1: number;
-}
-
-interface NodeData {
-  id: string;
-  data: { label?: string; content: any };
-  inputs: number;
-  outputs: number;
-  edgesIn: string[];
-  edgesOut: string[];
-}
-
-interface EdgesNodes {
-  [id: string]: {
-    outNodeId: string;
-    outputIndex: number;
-    inNodeId: string;
-    inputIndex: number;
-  };
-}
-
-interface EdgesPositions {
-  [id: string]: Vector;
-}
-
-interface EdgesActive {
-  [id: string]: boolean;
-}
+import {
+  EdgesActive,
+  EdgesNodes,
+  EdgesPositions,
+  NodeData,
+  Position,
+  Vector,
+} from "../graph/types";
+import { convertToLayeredGraph, getEdgeId } from "../graph/utils";
 
 export interface NodeProps {
   id: string;
@@ -68,126 +37,6 @@ interface Props {
   onEdgesChange: (newEdges: EdgeProps[]) => void;
   height: string;
   width: string;
-}
-
-function getEdgeId(
-  nodeOutId: string,
-  outputIndex: number,
-  nodeInId: string,
-  inputIndex: number
-) {
-  return `edge_${nodeOutId}:${outputIndex}_${nodeInId}:${inputIndex}`;
-}
-
-function convertToLayeredGraph(
-  initialNodes: {
-    id: string;
-    position: Position;
-    data: { label?: string; content: any };
-    inputs: number;
-    outputs: number;
-  }[],
-  initialEdges: {
-    id: string;
-    sourceNode: string;
-    sourceOutput: number;
-    targetNode: string;
-    targetInput: number;
-  }[]
-): {
-  initNodesPositions: Position[];
-  initNodesData: NodeData[];
-  initNodesOffsets: {
-    inputs: { offset: Position }[];
-    outputs: { offset: Position }[];
-  }[];
-  initEdgesNodes: EdgesNodes;
-  initEdgesPositions: EdgesPositions;
-  initEdgesActives: EdgesActive;
-} {
-  const graph = new dagre.graphlib.Graph();
-  graph.setGraph({ rankdir: 'LR' });
-  graph.setDefaultEdgeLabel(() => ({}));
-
-  initialNodes.forEach((node) => {
-    graph.setNode(node.id, { width: 200, height: 100 }); // Adjust width and height as needed
-  });
-
-  initialEdges.forEach((edge) => {
-    graph.setEdge(edge.sourceNode, edge.targetNode);
-  });
-
-  dagre.layout(graph);
-
-  const initNodesPositions = initialNodes.map((node) => ({
-    x: graph.node(node.id).x,
-    y: graph.node(node.id).y,
-  }));
-
-  const initNodesData: NodeData[] = initialNodes.map((node) => ({
-    id: node.id,
-    data: node.data,
-    inputs: node.inputs,
-    outputs: node.outputs,
-    edgesIn: initialEdges
-      .filter((edge) => edge.targetNode === node.id)
-      .map((edge) => edge.id),
-    edgesOut: initialEdges
-      .filter((edge) => edge.sourceNode === node.id)
-      .map((edge) => edge.id),
-  }));
-
-  const initNodesOffsets = initialNodes.map((node) => ({
-    inputs: Array.from({ length: node.inputs }, (_, index) => ({
-      offset: {
-        x: node.position.x,
-        y: node.position.y + (index + 1) * 20 - (node.inputs + 1) * 10,
-      },
-    })),
-    outputs: Array.from({ length: node.outputs }, (_, index) => ({
-      offset: {
-        x: node.position.x + 200,
-        y: node.position.y + (index + 1) * 20 - (node.outputs + 1) * 10,
-      },
-    })),
-  }));
-
-  const initEdgesNodes: EdgesNodes = {};
-  const initEdgesPositions: EdgesPositions = {};
-  const initEdgesActives: EdgesActive = {};
-
-  initialEdges.forEach((edge) => {
-    initEdgesNodes[edge.id] = {
-      outNodeId: edge.sourceNode,
-      outputIndex: edge.sourceOutput,
-      inNodeId: edge.targetNode,
-      inputIndex: edge.targetInput,
-    };
-    initEdgesPositions[edge.id] = {
-      x0:
-        initialNodes.find((node) => node.id === edge.sourceNode)!.position.x +
-        200,
-      y0:
-        initialNodes.find((node) => node.id === edge.sourceNode)!.position.y +
-        (edge.sourceOutput + 1) * 20 -
-        10,
-      x1: initialNodes.find((node) => node.id === edge.targetNode)!.position.x,
-      y1:
-        initialNodes.find((node) => node.id === edge.targetNode)!.position.y +
-        (edge.targetInput + 1) * 20 -
-        10,
-    };
-    initEdgesActives[edge.id] = false;
-  });
-
-  return {
-    initNodesPositions,
-    initNodesData,
-    initNodesOffsets,
-    initEdgesNodes,
-    initEdgesPositions,
-    initEdgesActives,
-  };
 }
 
 const FlowChart: Component<Props> = (props: Props) => {

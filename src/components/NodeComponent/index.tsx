@@ -55,11 +55,17 @@ const NodeComponent: Component<Props> = (props: Props) => {
         onCleanup(() => document.body.removeEventListener("click", onClick));
     }
 
+    function generateCalcString(value1: number, value2: number) {
+        const betterValue = Math.max(value1, value2);
+        const calcString = `calc(50px * ${betterValue})`;
+        return calcString;
+      }
+
     return (
         <div
             ref={props.ref}
             class={props.selected ? styles.nodeSelected : styles.node}
-            style={{ transform: `translate(${props.x}px, ${props.y}px)` }}
+            style={{ transform: `translate(${props.x}px, ${props.y}px)`, "min-height": generateCalcString(props.inputs, props.outputs) }}
             onMouseDown={props.onMouseDown}
             use:clickOutside={() => props.onClickOutside()}
         >
