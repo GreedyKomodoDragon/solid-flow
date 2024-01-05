@@ -42,6 +42,9 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background-image: radial-gradient(circle, #b8b8b8bf 1px, rgba(0, 0, 0, 0) 1px);
+    background-repeat: repeat;
+    background-size: 25px 25px;
 }
 
 .wrapper {
@@ -52,6 +55,6 @@
 
 .content {
     position: relative;
-    background-color: white;
+    background-color: transparent;
     background-size: 30px 30px;
 }

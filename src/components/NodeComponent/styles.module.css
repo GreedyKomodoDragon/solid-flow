@@ -59,8 +59,8 @@
     pointer-events: all;
     cursor: initial;
     background-color: #e38b29;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 100%;
     margin: 12px 0px;
     box-shadow: 1px 1px 11px -6px rgba(0, 0, 0, 0.75);
@@ -81,8 +81,8 @@
     pointer-events: all;
     cursor: crosshair;
     background-color: #e38b29;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 100%;
     margin: 12px 0px;
     box-shadow: 1px 1px 11px -6px rgba(0, 0, 0, 0.75);
