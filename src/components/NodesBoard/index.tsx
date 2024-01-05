@@ -7,6 +7,7 @@ interface NodeProps {
     data: { label?: string; content: any };
     inputs: number;
     outputs: number;
+    color: string;
     actions?: { delete: boolean };
 }
 
@@ -67,6 +68,7 @@ const NodesBoard: Component<Props> = (props: Props) => {
                         actions={node.actions}
                         label={node.data.label}
                         content={node.data.content}
+                        color={node.color}
                         inputs={node.inputs}
                         outputs={node.outputs}
                         onMouseDown={(event: any) => handleOnMouseDownNode(index(), event.x, event.y)}

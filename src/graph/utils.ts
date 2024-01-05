@@ -24,6 +24,7 @@ export function convertToLayeredGraph(
     data: { label?: string; content: any };
     inputs: number;
     outputs: number;
+    color?: string;
   }[],
   initialEdges: {
     id: string;
@@ -64,6 +65,7 @@ export function convertToLayeredGraph(
     data: node.data,
     inputs: node.inputs,
     outputs: node.outputs,
+    color: node.color ? node.color : "white",
     edgesIn: initialEdges
       .filter((edge) => edge.targetNode === node.id)
       .map((edge) => edge.id),

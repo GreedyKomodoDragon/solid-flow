@@ -17,6 +17,7 @@ export interface NodeData {
   outputs: number;
   edgesIn: string[];
   edgesOut: string[];
+  color: string;
 }
 
 export interface EdgesNodes {

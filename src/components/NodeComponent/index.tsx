@@ -20,6 +20,7 @@ interface Props {
     content: any;
     inputs: number;
     outputs: number;
+    color: string;
     onNodeMount: (inputs: { offset: { x: number; y: number } }[], outputs: { offset: { x: number; y: number } }[]) => void;
     onMouseDown?: (event: any) => void;
     onMouseDownOutput?: (outputIndex: number) => void;
@@ -65,7 +66,7 @@ const NodeComponent: Component<Props> = (props: Props) => {
         <div
             ref={props.ref}
             class={props.selected ? styles.nodeSelected : styles.node}
-            style={{ transform: `translate(${props.x}px, ${props.y}px)`, "min-height": generateCalcString(props.inputs, props.outputs) }}
+            style={{ transform: `translate(${props.x}px, ${props.y}px)`, "min-height": generateCalcString(props.inputs, props.outputs), "background-color": props.color }}
             onMouseDown={props.onMouseDown}
             use:clickOutside={() => props.onClickOutside()}
         >
